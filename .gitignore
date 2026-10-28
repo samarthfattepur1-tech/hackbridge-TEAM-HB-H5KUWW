@@ -1,0 +1,24 @@
+# Frontend dependencies
+node_modules/
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+backend/.env
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Editor settings
+.vscode/

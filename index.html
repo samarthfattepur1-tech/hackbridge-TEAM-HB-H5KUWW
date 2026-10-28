@@ -1,0 +1,233 @@
+// ========================================
+// SAFEOPS - TYPE DEFINITIONS
+// ========================================
+
+// Service health status
+export type ServiceStatus =
+  | "healthy"
+  | "unhealthy"
+  | "degraded"
+  | "offline"
+  | "unknown";
+
+// Incident severity
+export type IncidentSeverity =
+  | "critical"
+  | "high"
+  | "medium"
+  | "low";
+
+// Incident lifecycle status
+export type IncidentStatus =
+  | "detected"
+  | "investigating"
+  | "awaiting_approval"
+  | "recovering"
+  | "resolved"
+  | "failed"
+  | "blocked";
+
+// Risk classification
+export type RiskLevel =
+  | "low"
+  | "medium"
+  | "high"
+  | "critical";
+
+// Approval status
+export type ApprovalStatus =
+  | "pending"
+  | "approved"
+  | "rejected";
+
+// Recovery result
+export type RecoveryStatus =
+  | "not_started"
+  | "in_progress"
+  | "successful"
+  | "failed"
+  | "rolled_back"
+  | "escalated";
+
+// Monitoring agent connection
+export type AgentStatus =
+  | "connected"
+  | "disconnected"
+  | "degraded";
+
+// ========================================
+// MONITORED SERVICE
+// ========================================
+
+export interface MonitoredService {
+  id: string;
+  name: string;
+  endpoint: string;
+  status: ServiceStatus;
+  agentStatus: AgentStatus;
+  responseTime: number | null;
+  uptime: number;
+  lastChecked: string;
+  environment: "development" | "staging" | "production";
+}
+
+// ========================================
+// INCIDENT
+// ========================================
+
+export interface Incident {
+  id: string;
+  title: string;
+  serviceId: string;
+  serviceName: string;
+
+  description: string;
+  errorMessage: string;
+
+  severity: IncidentSeverity;
+  status: IncidentStatus;
+
+  detectedAt: string;
+  updatedAt: string;
+
+  httpStatus: number | null;
+
+  suspectedCause: string;
+  diagnosisEvidence: string[];
+
+  proposedAction: string;
+  riskScore: number;
+  riskLevel: RiskLevel;
+
+  approvalStatus: ApprovalStatus;
+  recoveryStatus: RecoveryStatus;
+
+  recoveryAttempts: number;
+  resolvedAt: string | null;
+}
+
+// ========================================
+// RECOVERY ACTION
+// ========================================
+
+export interface RecoveryAction {
+  id: string;
+  incidentId: string;
+
+  actionName: string;
+  description: string;
+
+  riskScore: number;
+  riskLevel: RiskLevel;
+
+  requiresApproval: boolean;
+  approvalStatus: ApprovalStatus;
+
+  status: RecoveryStatus;
+
+  proposedAt: string;
+  executedAt: string | null;
+  completedAt: string | null;
+
+  result: string;
+}
+
+// ========================================
+// PIPELINE STAGE
+// ========================================
+
+export type PipelineStageStatus =
+  | "pending"
+  | "in_progress"
+  | "completed"
+  | "failed"
+  | "blocked";
+
+export interface PipelineStage {
+  id: string;
+  name: string;
+  description: string;
+  status: PipelineStageStatus;
+  timestamp: string | null;
+}
+
+// ========================================
+// AUDIT LOG
+// ========================================
+
+export type AuditAction =
+  | "incident_detected"
+  | "diagnosis_completed"
+  | "risk_assessed"
+  | "approval_requested"
+  | "action_approved"
+  | "action_rejected"
+  | "recovery_started"
+  | "recovery_completed"
+  | "recovery_failed"
+  | "rollback_completed"
+  | "incident_resolved"
+  | "settings_updated";
+
+export interface AuditLogEntry {
+  id: string;
+  incidentId: string | null;
+
+  timestamp: string;
+
+  actor: string;
+  action: AuditAction;
+
+  description: string;
+  result: "success" | "failure" | "warning" | "info";
+}
+
+// ========================================
+// DASHBOARD METRICS
+// ========================================
+
+export interface DashboardMetrics {
+  totalServices: number;
+  healthyServices: number;
+  activeIncidents: number;
+  pendingApprovals: number;
+
+  successfulRecoveries: number;
+  failedRecoveries: number;
+
+  averageResponseTime: number;
+  averageRiskScore: number;
+
+  uptimePercentage: number;
+}
+
+// ========================================
+// MONITORING SETTINGS
+// ========================================
+
+export interface MonitoringSettings {
+  monitoringInterval: number;
+
+  automaticRecoveryEnabled: boolean;
+
+  lowRiskThreshold: number;
+  mediumRiskThreshold: number;
+
+  requireApprovalForMediumRisk: boolean;
+  requireApprovalForHighRisk: boolean;
+
+  notificationsEnabled: boolean;
+}
+
+// ========================================
+// NAVIGATION
+// ========================================
+
+export type PageName =
+  | "overview"
+  | "monitoring"
+  | "incident-detail"
+  | "approvals"
+  | "audit-log"
+  | "recovery-history"
+  | "settings";
